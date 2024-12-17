@@ -1,3 +1,8 @@
+/**
+ * Copyright 2024 ade5239
+ * @license Apache-2.0, see LICENSE for full text.
+ */
+
 import { LitElement, html, css } from "lit";
 import { DDDSuper } from "@haxtheweb/d-d-d/d-d-d.js";
 import { I18NMixin } from "@haxtheweb/i18n-manager/lib/I18NMixin.js";
@@ -34,10 +39,9 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
       "watermelon",
     ];
 
-    // Start sliders at min so handles appear at left
     this.accessories = 0;
-    this.base = 0;
-    this.leg = "";
+    this.base = 0;      
+    this.leg = "";      
     this.face = 0;
     this.faceItem = 0;
     this.hair = 0;
@@ -45,14 +49,14 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
     this.shirt = 0;
     this.skin = 0;
     this.hatColor = 0;
-    this.hat = this.hatList[0];
-    this.fire = false;
-    this.walking = false;
-    this.circle = false;
-    this.seed = '';
-    this.linkCopied = false;
-    this.hatIndex = 0;
-    this.characterSize = 100;
+    this.hat = this.hatList[0]; 
+    this.fire = false;         
+    this.walking = false;       
+    this.circle = false;        
+    this.seed = '';             
+    this.linkCopied = false;    
+    this.hatIndex = 0;          
+    this.characterSize = 100;  
   }
 
   static get properties() {
@@ -84,30 +88,28 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
     return [super.styles, css`
       :host {
         display: block;
-        background-color: #f9f9f9;
-        color: #333;
         font-family: var(--ddd-font-navigation);
       }
 
       .wrapper {
         display: flex;
-        flex-direction: row;
+        flex-direction: row; 
         height: 100vh;
         overflow: hidden;
-        gap: 10px; /* space between panes */
-        padding: 10px;
+        gap: var(--ddd-spacing-3);
+        padding: var(--ddd-spacing-3);
         box-sizing: border-box;
       }
 
       .left-panel {
         width: 50%;
-        background: linear-gradient(to bottom, #e0f7fa, #fff);
+        background: var(--ddd-theme-default-limestoneGray) ;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
         border-radius: var(--ddd-radius-md);
-        padding: 20px;
+        padding: var(--ddd-spacing-5);
         box-sizing: border-box;
         position: relative;
       }
@@ -117,7 +119,7 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
         background: rgba(0,0,0,0.1);
         padding: 5px 10px;
         border-radius: var(--ddd-radius-md);
-        margin-bottom: 20px;
+        margin-bottom: var(--ddd-spacing-5);
       }
 
       rpg-character {
@@ -128,20 +130,20 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
 
       .right-panel {
         width: 50%;
-        background: #fffce7;
-        color: #333;
+        background: var(--ddd-theme-default-coalyGray);
+        color: var(--ddd-theme-default-limestoneLight);
         display: flex;
         flex-direction: column;
         overflow-y: auto;
-        padding: 20px;
+        padding: var(--ddd-spacing-5);
         box-sizing: border-box;
         border-radius: var(--ddd-radius-md);
       }
 
       .controls-container {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
+        grid-template-columns: 1fr 1fr; 
+        gap: var(--ddd-spacing-5);
         padding: 0 10px;
         box-sizing: border-box;
       }
@@ -151,7 +153,7 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
         flex-direction: column;
         align-items: flex-start;
         background: #fff;
-        padding: 10px;
+        padding: var(--ddd-spacing-3);
         border-radius: var(--ddd-radius-md);
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       }
@@ -159,49 +161,26 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
       .input-field label {
         font-size: 14px;
         font-weight: 600;
-        margin-bottom: 5px;
+        margin-bottom: var(--ddd-spacing-1);
         color: #333;
       }
 
-      /* Update slider events to use detail.value and rely on attribute binding */
-      wired-slider {
-        /* width set by media queries below */
-      }
-
-      .checkbox-field {
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-      }
-      .checkbox-field label {
-        margin-bottom: 0;
-        margin-left: 5px;
-        font-size: 14px;
-        font-weight: 600;
-      }
-
-      .share-container {
-        margin-top: 20px;
-        text-align: center;
-      }
-
-      #copiedMessage {
-        margin-top: 10px;
-        background: #d1f7d1;
-        padding: 5px 10px;
-        border-radius: var(--ddd-radius-md);
-        font-size: 13px;
-      }
-
-      @media (max-width: 800px) {
-        .input-field wired-slider {
-          width: 150px !important;
+      @media (max-width: 1200px) {
+        .wrapper {
+          flex-direction: column; 
         }
-      }
 
-      @media (min-width: 801px) and (max-width: 1200px) {
+        .left-panel, .right-panel {
+          width: 100%;
+          height: auto;
+        }
+
+        .controls-container {
+          grid-template-columns: 1fr; 
+        }
+
         .input-field wired-slider {
-          width: 200px !important;
+          width: 100% !important; 
         }
       }
 
@@ -211,22 +190,39 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
         }
       }
 
-      @media (max-width: 800px) {
-        .wrapper {
-          flex-direction: column;
-        }
-        .left-panel, .right-panel {
-          width: 100%;
-          height: auto;
-        }
-        .controls-container {
-          grid-template-columns: 1fr;
-        }
+      .checkbox-field {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .checkbox-field label {
+        margin-bottom: 0;
+        margin-left: var(--ddd-spacing-1);
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .share-container {
+        margin-top: var(--ddd-spacing-5);
+        text-align: center;
+      }
+
+      #copiedMessage {
+        margin-top: var(--ddd-spacing-3);
+        background: #d1f7d1;
+        padding: 5px 10px;
+        border-radius: var(--ddd-radius-md);
+        font-size: 13px;
+      }
+
+      /* Change the wired-checkbox checkmark (SVG lines) to grey */
+      wired-checkbox svg {
+        stroke: grey !important;
       }
     `];
   }
 
-  //generates seed based on current properties
   generateSeed() {
     const pad = (num) => String(num).padStart(1, '0');
     return `${pad(this.accessories)}${pad(this.base)}${pad(this.face)}${pad(this.faceItem)}${pad(this.hair)}${pad(this.pants)}${pad(this.shirt)}${pad(this.skin)}${pad(this.hatColor)}0`;
@@ -440,7 +436,6 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
     }
   }
 
-  //parses the seed string into their corresponding properties
   parseSeed(seed) {
     if (seed.length === 10) {
       this.accessories = parseInt(seed.charAt(0));
@@ -455,11 +450,10 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
     }
   }
 
-  //updates properties when something has changed
   updated(changedProperties) {
     super.updated(changedProperties);
 
-    if ( //regens seed if something has changed
+    if (
       changedProperties.has('accessories') ||
       changedProperties.has('base') ||
       changedProperties.has('face') ||
@@ -485,7 +479,6 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
     this[prop] = val;
   }
 
-  //copies the shareable url to clipboard
   shareCharacter() {
     const params = new URLSearchParams();
     params.set('seed', this.seed);
@@ -496,7 +489,7 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
     const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
 
     navigator.clipboard.writeText(url).then(() => {
-      this.linkCopied = true; //lets user know something successfully copied
+      this.linkCopied = true;
       setTimeout(() => {
         this.linkCopied = false;
       }, 2000);
