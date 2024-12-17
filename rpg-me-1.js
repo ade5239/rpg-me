@@ -25,6 +25,7 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
       locales: ["ar", "es", "hi", "zh"],
     });
 
+    // List of hats the character can wear
     this.hatList = [
       "none",
       "bunny",
@@ -41,7 +42,7 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
 
     this.accessories = 0;
     this.base = 0;      
-    this.leg = "";      
+    this.leg = "";      // leg is ignored 
     this.face = 0;
     this.faceItem = 0;
     this.hair = 0;
@@ -62,6 +63,7 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
   static get properties() {
     return {
       ...super.properties,
+      // Character and UI related properties with their types
       title: { type: String },
       accessories: { type: Number },
       base: { type: Number },
@@ -165,6 +167,8 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
         color: #333;
       }
 
+      
+
       @media (max-width: 1200px) {
         .wrapper {
           flex-direction: column; 
@@ -210,21 +214,19 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
 
       #copiedMessage {
         margin-top: var(--ddd-spacing-3);
-        background: #d1f7d1;
+        background: var(--ddd-theme-default-alertAllClear);
+        color: black;
         padding: 5px 10px;
         border-radius: var(--ddd-radius-md);
         font-size: 13px;
       }
-
-      /* Change the wired-checkbox checkmark (SVG lines) to grey */
-      wired-checkbox svg {
-        stroke: grey !important;
-      }
     `];
   }
 
+  // generates seed based on current character property values
   generateSeed() {
     const pad = (num) => String(num).padStart(1, '0');
+    // accessories, base, face, faceItem, hair, pants, shirt, skin, hatColor, and trailing 0
     return `${pad(this.accessories)}${pad(this.base)}${pad(this.face)}${pad(this.faceItem)}${pad(this.hair)}${pad(this.pants)}${pad(this.shirt)}${pad(this.skin)}${pad(this.hatColor)}0`;
   }
 
@@ -311,6 +313,7 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
 
             <div class="input-field">
               <label>Hair (0-9) ${noHair ? '(No Hair Option)' : ''}</label>
+              <!-- If base=0 (no hair), disable the hair slider -->
               <wired-slider
                 min="0"
                 max="9"
@@ -411,11 +414,12 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
   }
 
   firstUpdated() {
+    // when the element first updates (after initial render), parse URL params
     const params = new URLSearchParams(window.location.search);
     const seedParam = params.get('seed');
     if (seedParam && seedParam.length === 10) {
       this.seed = seedParam;
-      this.parseSeed(seedParam);
+      this.parseSeed(seedParam); // decode seed into character properties
     }
     const hatParam = params.get('hat');
     if (hatParam && this.hatList.includes(hatParam)) {
@@ -436,6 +440,7 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
     }
   }
 
+  // parses a given 10-digit seed into the character properties
   parseSeed(seed) {
     if (seed.length === 10) {
       this.accessories = parseInt(seed.charAt(0));
@@ -447,12 +452,14 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
       this.shirt = parseInt(seed.charAt(6));
       this.skin = parseInt(seed.charAt(7));
       this.hatColor = parseInt(seed.charAt(8));
+      // last digit is placeholder to make 10 digit seed
     }
   }
 
   updated(changedProperties) {
     super.updated(changedProperties);
 
+    // ff any properties change, regenerate the seed
     if (
       changedProperties.has('accessories') ||
       changedProperties.has('base') ||
@@ -467,6 +474,7 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
       this.seed = this.generateSeed();
     }
 
+    // if hatIndex changes, update the hat accordingly
     if (changedProperties.has('hatIndex')) {
       if (this.hatIndex < 0 || this.hatIndex >= this.hatList.length) {
         this.hatIndex = 0;
@@ -476,10 +484,12 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
   }
 
   updateChar(prop, val) {
+    // updates a property of the character
     this[prop] = val;
   }
 
   shareCharacter() {
+    // generates a shareable URL with current seed
     const params = new URLSearchParams();
     params.set('seed', this.seed);
     params.set('hat', this.hat);
@@ -489,7 +499,7 @@ export class RpgMe1 extends DDDSuper(I18NMixin(LitElement)) {
     const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
 
     navigator.clipboard.writeText(url).then(() => {
-      this.linkCopied = true;
+      this.linkCopied = true; // notifies user that the link was copied
       setTimeout(() => {
         this.linkCopied = false;
       }, 2000);
